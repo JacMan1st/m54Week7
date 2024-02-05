@@ -1,9 +1,14 @@
+* {
+  font-family: monospace;
+  font-size: 30px;
+}
+
 body {
   display: flex;
   justify-content: center;
   background-color: black;
 
-  text-shadow: 0 0 8px white;
+  text-shadow: 0 0 2px white;
   margin: 0;
 }
 
@@ -15,4 +20,19 @@ body {
 a {
   text-decoration: none;
   color: white;
+}
+
+.calmContain {
+  margin: 0;
+  background-image: url("https://wallpapercave.com/wp/DlGpnB5.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 100%;
+}
+
+.innerContain {
+  padding: 50px;
+  background-color: rgba(0, 0, 0, 0.652);
+  color: white;
+  text-shadow: 1px 0 8px darkblue;
 }
