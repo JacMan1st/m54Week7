@@ -1,0 +1,49 @@
+* {
+  font-family: monospace;
+  font-size: 30px;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  background-color: black;
+
+  text-shadow: 0 0 2px white;
+  margin: 0;
+}
+
+.container {
+  background-image: url("https://images7.alphacoders.com/684/684381.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding: 50px;
+  color: red;
+}
+
+.calmContain {
+  margin: 0;
+  background-image: url("https://wallpapercave.com/wp/DlGpnB5.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 100%;
+}
+
+.innerContain {
+  padding: 50px;
+  background-color: rgba(0, 0, 0, 0.652);
+  text-shadow: 1px 0 8px darkblue;
+  color: white;
+}
+
+.wallContain {
+  background-image: url("https://customclosetideas.files.wordpress.com/2015/08/468717285.jpg?w=1180");
+}
+
+h1 {
+  font-size: 40px;
+}
+
+a {
+  text-decoration: none;
+  color: red;
+}
