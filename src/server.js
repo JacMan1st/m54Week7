@@ -1,69 +1,83 @@
+require("dotenv").config();
 const express = require("express");
-const { request } = require("http");
+const mongoose = require("mongoose");
 
 const app = express();
 
-// HTTP verbs - GET, POST, PUT, DELETE
-
-const fakeArr = [];
-
 app.use(express.json());
 
-// HTTP verb GET
-app.get("/books", (request, responce) => {
-  responce.send({ message: "success", fakeArr: fakeArr });
+const connection = async () => {
+  await mongoose.connect(process.env.MONGO_URI);
+  console.log("DB connection is working");
+};
+connection();
+
+const bookSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    require: true,
+    unique: true,
+  },
+  author: {
+    type: String,
+  },
+  genre: {
+    type: String,
+  },
 });
 
-app.get("/books/getfirstbook", (request, response) => {
-  console.log("/books/getfirstbook: ", request.path);
-  const book = fakeArr[0];
-  response.send({ message: "got first book", book: book });
-});
+const Book = mongoose.model("Book", bookSchema);
 
-app.post("/books", (request, response) => {
-  const newBook = {
-    id: book_id++,
+const logTypeOfResult = async (result) => {
+  console.log(`Typeof result: ${typeof result} - result: ${result}`);
+};
+
+app.post("/books/addBook", async (request, response) => {
+  const book = await Book.create({
     title: request.body.title,
-    author: request.body.author,
-    genre: request.body.genre,
-  };
-  fakeArr.push(newBook);
-  console.log(fakeArr);
-  const successResponse = {
-    message: "Book successfully added",
-    addedBook: newBook,
-  };
-  response.send(successResponse);
+    author: "Emily Bronte",
+    genre: "epic tradgey",
+  });
+  console.log("book", book);
+  response.send({ message: "book created", book: book });
 });
 
-app.put("/books/:id", (request, response) => {
-  const id = parseInt(request.params.id);
-  const { title, author, genre } = request.body;
+app.get("/books/getAllBooks", async (request, response) => {
+  const books = await Book.find({});
+  response.send({ message: "got all books successfully", books: books });
+});
 
-  const index = fakeArr.findIndex((book) => book.id === id);
-  if (index !== -1) {
-    fakeArr[index] = { id, title, author, genre };
-    response.send({
-      message: "Book updated successfully",
-      updatedBook: fakeArr[index],
-    });
-  } else {
-    response.status(404).send({ message: "Book not found" });
+app.put("/books/editAuthor", async (request, response) => {
+  try {
+    const title = request.body.title;
+    const editAuthor = request.body.author;
+
+    const updatedBook = await Book.findOneAndUpdate(
+      { title: title },
+      { $set: { author: editAuthor } },
+      { new: true }
+    );
+
+    if (!updatedBook) {
+      return response.status(404).send({ message: "Error: Book not found" });
+    }
+
+    response.send({ message: "Success: Author updated", book: updatedBook });
+  } catch (error) {
+    response.status(500).send({ message: "Error: Unable to update author" });
   }
 });
 
-app.delete("/books/:id", (request, response) => {
-  const id = parseInt(request.params.id);
-
-  const index = fakeArr.findIndex((book) => book.id === id);
-  if (index !== -1) {
-    const deletedBook = fakeArr.splice(index, 1)[0];
-    response.send({
-      message: "Book deleted successfully",
-      deletedBook: deletedBook,
+app.delete("/books/deleteBook", async (request, response) => {
+  try {
+    const deleteBook = await Book.findOneAndDelete({
+      title: request.body.title,
     });
-  } else {
-    response.status(404).send({ message: "Book not found" });
+    return response
+      .status(200)
+      .json({ message: "deleted success", data: deleteBook });
+  } catch (error) {
+    return response.status(400).json({ message: "Error: Unable to delete" });
   }
 });
 
