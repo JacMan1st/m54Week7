@@ -1,3 +1,4 @@
+const { response } = require("express");
 const Book = require("./model");
 
 const addBook = async (request, response) => {
@@ -48,7 +49,18 @@ const deleteBook = async (request, response) => {
       .status(200)
       .json({ message: "deleted success", data: deleteBook });
   } catch (error) {
-    return response.status(400).json({ message: "Error: Unable to delete" });
+    return response.status(400).json({ message: "Unable to delete" });
+  }
+};
+
+const deleteAllBooks = async (request, response) => {
+  try {
+    const deleteAllBooks = await Book.deleteMany();
+    return response
+      .status(200)
+      .json({ message: "deleted all success", data: deleteAllBooks });
+  } catch (error) {
+    return response.status(400).json({ message: error.message });
   }
 };
 
@@ -57,4 +69,5 @@ module.exports = {
   getAllBooks: getAllBooks,
   editAuthor: editAuthor,
   deleteBook: deleteBook,
+  deleteAllBooks: deleteAllBooks,
 };
