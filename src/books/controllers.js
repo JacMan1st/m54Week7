@@ -64,10 +64,20 @@ const deleteAllBooks = async (request, response) => {
   }
 };
 
+const getFirstBook = async (request, response) => {
+  try {
+    const books = await Book.find();
+    return response.status(200).json({ data: books[0] });
+  } catch (error) {
+    return response.status(400).json(error);
+  }
+};
+
 module.exports = {
   addBook: addBook,
   getAllBooks: getAllBooks,
   editAuthor: editAuthor,
   deleteBook: deleteBook,
   deleteAllBooks: deleteAllBooks,
+  getFirstBook: getFirstBook,
 };
